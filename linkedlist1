@@ -1,0 +1,207 @@
+#include <iostream>
+using namespace std;
+class node{
+    public:
+  int data;
+  node* next;
+  
+  node(int value){
+  this->data=value;
+  this->next=NULL;
+}
+};
+
+void insertatfront(int value,node* &head,node* &tail){
+  if(head==NULL && tail==NULL){
+    //create new node
+    node* newnode=new node(value);
+    //set head
+    head=newnode;
+    //set tail
+    tail=newnode;
+  }
+  else{
+    //create new node
+    node* newnode=new node(value);
+    //set newnode ka next
+    newnode->next=head;
+    //set head
+    head=newnode; 
+  }
+}
+
+void insertatend(int value,node* &head,node* &tail){
+  if(head==NULL && tail==NULL){
+    node* newnode=new node(value);
+    head=newnode;
+    tail=newnode;
+  }
+  else{
+    node* newnode=new node(value);
+    tail->next=newnode;
+    tail=newnode;
+  }
+}
+
+void print(node* head){
+  node* temp=head;
+  while(temp!=NULL){
+    cout<<temp->data<<" ";
+    temp=temp->next;
+  }
+  cout<<endl;
+}
+
+int getlength(node* head,node* tail){
+  node* temp=head;
+  int count=1;
+  while(temp->next != NULL){
+    count++;
+    temp=temp->next;
+  }
+  return count;
+}
+
+void insertatposition(int position,int value,node* &head,node* &tail){
+  int n=getlength(head,tail);
+  if(position==1){
+    insertatfront(value,head,tail);
+  }
+  else if(position==n+1){
+    insertatend(value,head,tail);
+  }
+  else
+  {
+    node* newnode=new node(value);
+    node* temp=head;
+    for(int i=0;i<position-2;i++){
+      temp=temp->next;
+    }
+    newnode->next=temp->next;
+    temp->next=newnode;
+  }
+}
+
+bool search(int find,node* head,node* tail){
+  node* temp=head;
+  while(temp!=NULL){
+    if(temp->data==find){
+      return true;
+    }
+    temp=temp->next;
+  }
+  return false;
+}
+// Delete node at front
+void deleteatfront(node* &head, node* &tail) {
+    if (head == nullptr) {
+        cout << "List is empty" << endl;
+        return;
+    }
+    
+    node* temp = head;
+    head = head->next;
+
+    if (head == nullptr) { // If list becomes empty
+        tail = nullptr;
+    }
+
+    delete temp;
+}
+
+// Delete node at end
+void deleteatend(node* &head, node* &tail) {
+    if (head == nullptr) {
+        cout << "List is empty" << endl;
+        return;
+    }
+
+    if (head == tail) { // If there's only one element
+        delete head;
+        head = nullptr;
+        tail = nullptr;
+        return;
+    }
+
+    node* temp = head;
+    while (temp->next != tail) {
+        temp = temp->next;
+    }
+
+    delete tail; // Delete the last node
+    tail = temp; // Update tail
+    tail->next = nullptr; // Set new tail's next to nullptr
+}
+
+// Delete node at a specific position
+void deleteatposition(int position, node* &head, node* &tail) {
+    int n = getlength(head, tail);
+    if (head == nullptr) {
+        cout << "List is empty" << endl;
+        return;
+    }
+
+    if (position < 1 || position > n) {
+        cout << "Invalid position" << endl;
+        return;
+    }
+
+    if (position == 1) {
+        deleteatfront(head, tail);
+    } 
+    else if (position == n) {
+        deleteatend(head, tail);
+    } 
+    else {
+        node* prev = head;
+        for (int i = 0; i < position - 2; i++) {
+            prev = prev->next;
+        }
+        node* curr = prev->next;
+        node* forward = curr->next;
+        prev->next = forward;
+        delete curr;
+    }
+}
+
+int main() {
+  //static
+  //node first;
+  //dynamic
+  //node *first= new node()
+  node* head=NULL;
+  node* tail=NULL;
+ insertatfront(100,head,tail);
+  print(head);
+ insertatfront(120,head,tail);
+  print(head);
+ insertatfront(140,head,tail);
+  print(head);
+ insertatfront(160,head,tail);
+  print(head);
+ insertatfront(190,head,tail);
+  print(head);
+// node* head=NULL;
+// node* tail=NULL;
+// head=insertatend(100,head,tail);
+// print(head);
+// head=insertatend(200,head,tail);
+// print(head);
+
+int length=getlength(head,tail);
+cout<<length<<endl;
+
+insertatposition(2,110 , head,tail);
+print(head);
+
+bool ans=search(139,head,tail);
+cout<<ans<<endl;
+
+deleteatfront(head,tail);
+print(head);
+deleteatend(head,tail);
+print(head);
+deleteatposition(2,head,tail);
+print(head);
+return 0;
+}

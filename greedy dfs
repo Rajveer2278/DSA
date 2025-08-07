@@ -1,0 +1,40 @@
+//greedy dfs ka code
+class Solution {
+public:
+    int row;
+    int col;
+    vector<vector<int>> direction = {{1, 1}, {1, 0}, {0, 1}};  // diagonal, down, right
+
+    int dfs(vector<vector<int>>& fruits, int i, int j) {
+        if (i >= row || j >= col)
+            return 0;
+
+        int max_val = -1;
+        int next_i = -1, next_j = -1;
+
+        // Check the 3 directions and choose the one with the max fruit value
+        for (auto& dir : direction) {
+            int ni = i + dir[0];
+            int nj = j + dir[1];
+            if (ni < row && nj < col) {
+                if (fruits[ni][nj] > max_val) {
+                    max_val = fruits[ni][nj];
+                    next_i = ni;
+                    next_j = nj;
+                }
+            }
+        }
+
+        // If no valid direction is found, return current fruit value
+        if (next_i == -1 || next_j == -1)
+            return fruits[i][j];
+
+        return fruits[i][j] + dfs(fruits, next_i, next_j);
+    }
+
+    int maxCollectedFruits(vector<vector<int>>& fruits) {
+        row = fruits.size();
+        col = fruits[0].size();
+        return dfs(fruits, 0, 0);
+    }
+};
